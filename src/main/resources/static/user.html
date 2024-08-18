@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .user-details, .transactions {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            margin-right: 20px;
+        }
+        .user-details {
+            max-width: 400px;
+            margin-right: 20px;
+        }
+        .user-details h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .user-details p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #555;
+        }
+        .account-amount {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .navigation-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .navigation-buttons a, .logout-button {
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 50px;
+            font-size: 16px;
+            text-align: center;
+            transition: background 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+        .navigation-buttons a:hover, .logout-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .transactions {
+            max-width: 600px;
+            display: none; /* Initially hidden */
+        }
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .transaction-table th, .transaction-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .transaction-table th {
+            background-color: #f2f2f2;
+        }
+        .toggle-transactions-button {
+            padding: 10px 20px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        .toggle-transactions-button:hover {
+            background-color: #218c54;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .pagination button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="user-details">
+    <h1>User Details</h1>
+    <p><strong>Username:</strong> <span id="username"></span></p>
+    <p><strong>Account Amount:</strong> <span id="accountAmount" class="account-amount"></span></p>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <a href="salon0.html">Go to Salon 0</a>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Toggle Transactions Button -->
+    <button class="toggle-transactions-button" onclick="toggleTransactions()">Show Last 10 Transactions</button>
+</div>
+
+<div class="transactions" id="transactions">
+    <h2>Last 10 Transactions</h2>
+    <table class="transaction-table" id="transactionTable">
+        <thead>
+        <tr>
+            <th>Salon</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Success</th>
+            <th>Created Date</th>
+        </tr>
+        </thead>
+        <tbody id="transactionsBody"></tbody>
+    </table>
+    <div class="pagination" id="paginationControls"></div>
+</div>
+
+<script>
+    let currentPage = 0;
+
+    async function fetchUserDetails() {
+        try {
+            const response = await fetch('/rest/cinema/salon0/get/user');
+            const data = await response.json();
+            const user = data.data;
+
+            document.getElementById('username').textContent = user.username;
+            document.getElementById('accountAmount').textContent = '$' + user.accountAmount.toFixed(2);
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    }
+
+    async function fetchTransactions(page) {
+        try {
+            const response = await fetch(`/rest/cinema/salon0/get/transactions?page=${page}`);
+            const data = await response.json();
+            const transactions = data.data.content;
+
+            const transactionsBody = document.getElementById('transactionsBody');
+            transactionsBody.innerHTML = '';
+
+            transactions.forEach(transaction => {
+                const row = `
+                    <tr>
+                        <td>${transaction.salon}</td>
+                        <td>${transaction.type}</td>
+                        <td>$${transaction.amount.toFixed(2)}</td>
+                        <td>${transaction.isSuccessful ? 'Yes' : 'No'}</td>
+                        <td>${new Date(transaction.createdDate).toLocaleDateString()}</td>
+                    </tr>
+                `;
+                transactionsBody.innerHTML += row;
+            });
+
+            updatePaginationControls(data.data);
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+        }
+    }
+
+    function updatePaginationControls(pageData) {
+        const paginationControls = document.getElementById('paginationControls');
+        paginationControls.innerHTML = '';
+
+        if (pageData.hasPrevious) {
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.onclick = () => {
+                currentPage--;
+                fetchTransactions(currentPage);
+            };
+            paginationControls.appendChild(prevButton);
+        }
+
+        if (pageData.hasNext) {
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => {
+                currentPage++;
+                fetchTransactions(currentPage);
+            };
+            paginationControls.appendChild(nextButton);
+        }
+    }
+
+    function toggleTransactions() {
+        const transactionsDiv = document.getElementById('transactions');
+        const toggleButton = document.querySelector('.toggle-transactions-button');
+
+        if (transactionsDiv.style.display === 'none') {
+            transactionsDiv.style.display = 'block';
+            toggleButton.textContent = 'Hide Last 10 Transactions';
+            fetchTransactions(currentPage); // Fetch transactions when showing the section
+        } else {
+            transactionsDiv.style.display = 'none';
+            toggleButton.textContent = 'Show Last 10 Transactions';
+        }
+    }
+
+    function logout() {
+        window.location.href = '/logout';
+    }
+
+    window.onload = async () => {
+        await fetchUserDetails();
+        // Transactions are only fetched when the user clicks the button to show them
+    };
+</script>
+
+</body>
+</html>
