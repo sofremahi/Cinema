@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #0062E6, #33AEFF);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #0062E6;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        input[type="submit"]:hover {
+            background: #004bb5;
+        }
+        .error-message {
+            display: none;
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .back-home {
+            margin-top: 20px;
+        }
+        .back-home a, .signup-link a {
+            color: #0062E6;
+            text-decoration: none;
+        }
+        .signup-link {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm" method="post" action="/login">
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="submit" value="Login" />
+        <div class="error-message" id="errorMessage"></div>
+    </form>
+    <div class="back-home">
+        <a href="/homepage.html">Back to Home</a>
+    </div>
+    <div class="signup-link">
+        <a href="/signin.html">Haven't created an account? Sign Up</a>
+    </div>
+</div>
+
+<script>
+    // Display error message based on the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'true') {
+        const errorType = urlParams.get('errorType');
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorType === 'username') {
+
+        } else {
+            errorMessage.textContent = 'username or password is not correct';
+        }
+        errorMessage.style.display = 'block';
+    }
+</script>
+</body>
+</html>

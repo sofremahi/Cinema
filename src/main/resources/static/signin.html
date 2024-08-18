@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <style>
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #ff6f00, #ff8c00); /* Modern orange gradient */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .signup-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .signup-container h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #333;
+    }
+    input[type="text"], input[type="password"] {
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #0062E6;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    input[type="submit"]:hover {
+      background: #004bb5;
+    }
+    .back-home {
+      margin-top: 20px;
+    }
+    .back-home a, .login-link a {
+      color: #0062E6;
+      text-decoration: none;
+    }
+    .login-link {
+      margin-top: 10px;
+    }
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<div class="signup-container">
+  <h2>Sign Up</h2>
+  <form id="signupForm" method="post" action="/rest/cinema/salon0/add/user">
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <input type="hidden" name="authorities" value="USER" />
+    <input type="submit" value="Sign Up" />
+    <div class="error-message" id="errorMessage"></div>
+  </form>
+  <div class="back-home">
+    <a href="/homepage.html">Back to Home</a>
+  </div>
+  <div class="login-link">
+    <a href="/login.html">Already have an account? Login</a>
+  </div>
+</div>
+
+<script>
+  document.getElementById('signupForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const formData = new FormData(this);
+    const data = new URLSearchParams(formData).toString();
+
+    fetch('/rest/cinema/salon0/add/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: data
+    }).then(response => response.json())
+            .then(result => {
+              if (result.status === 'OK') {
+                window.location.href = '/login.html'; // Redirect to login page on success
+              } else {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = result.message || 'Sign up failed. Please try again.';
+                errorMessage.style.display = 'block';
+              }
+            }).catch(error => {
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = 'An error occurred. Please try again.';
+      errorMessage.style.display = 'block';
+    });
+  });
+</script>
+</body>
+</html>
