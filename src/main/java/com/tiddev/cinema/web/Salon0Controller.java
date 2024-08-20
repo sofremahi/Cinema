@@ -9,6 +9,7 @@ import com.tiddev.cinema.service.constant.TransactionType;
 import com.tiddev.cinema.service.model.SeatsSalon0;
 import com.tiddev.cinema.service.model.Transactions;
 import com.tiddev.cinema.service.model.User;
+import com.tiddev.cinema.service.modelDto.CinemaInfoDto;
 import com.tiddev.cinema.service.modelDto.SeatsSalon0Dto;
 import com.tiddev.cinema.service.repo.Salon0Repo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class Salon0Controller {
     private final Salon0Service service;
     private final Salon0Repo repository;
+    private final CinemaInfoDto cinemaInfoDto;
 
     @PostMapping("/add/seat")
     public Response<String> addSeat(@RequestBody SeatsSalon0Dto dto) {
@@ -145,4 +147,8 @@ public class Salon0Controller {
         return new Response<>(service.findByUsername(username), "Success", HttpStatus.OK);
     }
 
+    @GetMapping("/salon/details")
+    public Response<CinemaInfoDto> getInfo(){
+        return new Response<>(cinemaInfoDto);
+    }
 }

@@ -6,12 +6,20 @@ spring:
     password: mahan
     hikari:
       schema: MAHAN
-
+  config:
+    import:
+      - "app-prod.yml"
+  profiles:
+    active: default
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
 
+cinema:
+  salon:
+    name: "gol"
+    number: 2
 
 

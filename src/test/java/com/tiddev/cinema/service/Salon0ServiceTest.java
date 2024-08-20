@@ -186,11 +186,6 @@ class Salon0ServiceTest {
 
     }
 
-    //    public List<Transactions> getLast10Transactions(String username) {
-//        Pageable pageable = PageRequest.of(0, 10);
-//        Page<Transactions> transactionsPage = transRepo.findByUserUsername(username, pageable);
-//        return transactionsPage.getContent(); // list
-//    }
     @Test
     public void givenUsername_whenGetTransactions_thenVerify() {
         Pageable pageable = PageRequest.of(0, 10);

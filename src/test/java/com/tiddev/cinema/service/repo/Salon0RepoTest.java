@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @DataJpaTest
 public class Salon0RepoTest {
 
@@ -22,11 +23,11 @@ public class Salon0RepoTest {
     public void givenRowAndColumn_whenFind_thenReturnSalon0() {
         //given : setup
         SeatsSalon0 seat = SeatsSalon0.builder().column(2L).row(2L).build();
- Long row = 2L;
- Long column = 2L;
- salon0Repo.save(seat);
+        Long row = 2L;
+        Long column = 2L;
+        salon0Repo.save(seat);
         //when : action we are going to test
-Optional<SeatsSalon0> check = salon0Repo.findByRowAndColumn(row , column);
+        Optional<SeatsSalon0> check = salon0Repo.findByRowAndColumn(row, column);
         // verify the output
         Assertions.assertTrue(check.isPresent());
     }
