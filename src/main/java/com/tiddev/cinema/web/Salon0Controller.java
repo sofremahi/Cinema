@@ -32,7 +32,8 @@ import java.util.Map;
 @RequestMapping("/rest/cinema/salon0")
 public class Salon0Controller {
     private final Salon0Service service;
-private final Salon0Repo repository;
+    private final Salon0Repo repository;
+
     @PostMapping("/add/seat")
     public Response<String> addSeat(@RequestBody SeatsSalon0Dto dto) {
         try {
@@ -131,15 +132,17 @@ private final Salon0Repo repository;
         String username = authentication.getName();
         return new Response<>(service.userSeats(username), "Success", HttpStatus.OK);
     }
+
     @GetMapping("/seats/{row}/{column}")
     public Response<SeatsSalon0> getSeatByRowColumn(@PathVariable("row") Long row, @PathVariable("column") Long column) {
         SeatsSalon0 seat = repository.findByRowAndColumn(row, column)
                 .orElseThrow(() -> new CustomException("Seat not found"));
         return new Response<>(seat, "Seat retrieved successfully", HttpStatus.OK);
     }
+
     @GetMapping("/find/user")
     public Response<Boolean> findUser(@RequestParam String username) {
-        return new Response<>(service.findByUsername(username) , "Success", HttpStatus.OK);
+        return new Response<>(service.findByUsername(username), "Success", HttpStatus.OK);
     }
 
 }

@@ -1,13 +1,13 @@
 package com.tiddev.cinema.service.modelDto;
 import com.tiddev.cinema.service.constant.SeatStatus;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SeatsSalon0Dto {
     private Long row;
 
