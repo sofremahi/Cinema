@@ -12,19 +12,15 @@ import com.tiddev.cinema.service.model.Transactions;
 import com.tiddev.cinema.service.model.User;
 import com.tiddev.cinema.service.modelDto.SeatsSalon0Dto;
 import com.tiddev.cinema.service.repo.Salon0Repo;
-import com.tiddev.cinema.service.repo.Salon0RepoTest;
 import com.tiddev.cinema.service.repo.TransRepo;
 import com.tiddev.cinema.service.repo.UserRepo;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
