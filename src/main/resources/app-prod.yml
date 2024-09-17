@@ -1,0 +1,8 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+cinema:
+  salon:
+    name: "barg"
+    number: 3
